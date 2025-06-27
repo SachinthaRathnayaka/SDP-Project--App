@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sachir_vehicle_care/Pages/HomeScreen.dart';
-import 'package:sachir_vehicle_care/Pages/SpareParts.dart';
-import 'package:sachir_vehicle_care/Pages/RepairBooking.dart';
+import 'package:sachir_vehicle_care/Pages/ChargingMap.dart';
+import 'package:sachir_vehicle_care/Pages/ChargingBooking.dart';
 
-class VehicleRepairMainScreen extends StatelessWidget {
-  const VehicleRepairMainScreen({Key? key}) : super(key: key);
+class VehicleChargingMainScreen extends StatelessWidget {
+  const VehicleChargingMainScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class VehicleRepairMainScreen extends StatelessWidget {
                     height: 250,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('lib/assets/SignUp_bg.jpg'),
+                        image: AssetImage('lib/assets/chargingBG.jpg'),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.only(
@@ -101,14 +101,14 @@ class VehicleRepairMainScreen extends StatelessWidget {
                 ],
               ),
 
-              // "Vehicle Repairing" text
+              // "Vehicle cleaning" text
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0.0),
                 child: Text(
-                  'Vehicle Repairing',
+                  'Vehicle Charging',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 32,
+                    fontSize: 34,
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
                     shadows: [
@@ -136,14 +136,14 @@ class VehicleRepairMainScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Spare parts button
+                          // Charging Spot button
                           _buildMenuButton(
-                            image: 'lib/assets/SpareParts.jpg',
-                            label: 'Spare Parts',
+                            image: 'lib/assets/ChargingSpot.jpg',
+                            label: 'Charging Spot',
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const VehicleSparePartsScreen()),
+                                MaterialPageRoute(builder: (context) => const VehicleChargingMapScreen()),
                               );
                             },
                           ),
@@ -152,12 +152,12 @@ class VehicleRepairMainScreen extends StatelessWidget {
 
                           // Book your time button
                           _buildMenuButton(
-                            image: 'lib/assets/BookRepair.jpg',
-                            label: 'Book your date',
+                            image: 'lib/assets/chargingBook.jpg',
+                            label: 'Book your time',
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const VehicleRepairBookingScreen()),
+                                MaterialPageRoute(builder: (context) => const VehicleChargingBookingScreen()),
                               );
                             },
                           ),

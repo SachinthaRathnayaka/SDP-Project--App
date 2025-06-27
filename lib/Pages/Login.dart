@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sachir_vehicle_care/Pages/Signup.dart';
 import 'package:sachir_vehicle_care/Pages/ForgetPassword.dart';
 import 'package:sachir_vehicle_care/Pages/HomeScreen.dart';
+import 'package:sachir_vehicle_care/providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,12 +13,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -88,20 +92,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       Image.asset(
-                        'assets/SachiR_Vehicle_Care.png',
+                        'lib/assets/SachiR_Vehicle_Care.png',
                         width: 400,
                         height: 200,
-                        color: Colors.white,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Text(
-                            'SachiR Vehicle Care',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                            ),
-                          );
-                        },
+                        color:Colors.white,
                       ),
                     ],
                   ),
@@ -140,25 +134,24 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            const SizedBox(height: 30),
-
-            // Username field
+            const SizedBox(height: 30),            // Email field
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Username',
+                    'Email',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 8),
                   TextField(
-                    controller: _usernameController,
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      hintText: 'Enter username',
+                      hintText: 'Enter email',
                       fillColor: Colors.grey[200],
                       filled: true,
                       border: OutlineInputBorder(
@@ -230,35 +223,74 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            const SizedBox(height: 30),
-
-            // Login Button
+            const SizedBox(height: 30),            // Login Button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (mounted) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    );
+              child: Consumer<AuthProvider>(
+                builder: (context, authProvider, _) {
+                  if (authProvider.errorMessage != null) {
+                    // Show error message
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(authProvider.errorMessage!),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      authProvider.clearError();
+                    });
                   }
+                  
+                  return ElevatedButton(
+                    onPressed: authProvider.isLoading
+                        ? null // Disable button when loading
+                        : () async {
+                            // Hide keyboard
+                            FocusScope.of(context).unfocus();
+                            
+                            // Validate inputs
+                            final email = _emailController.text.trim();
+                            final password = _passwordController.text.trim();
+                            
+                            if (email.isEmpty || password.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Please enter both email and password'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+                            
+                            // Attempt login
+                            final success = await authProvider.login(email, password);
+                            
+                            if (success && mounted) {
+                              Navigator.pushReplacement(
+                                context, 
+                                MaterialPageRoute(builder: (context) => const HomeScreen()),
+                              );
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00BCD4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      minimumSize: const Size(200, 50),
+                    ),
+                    child: authProvider.isLoading 
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'Log In',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                  );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00BCD4),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  minimumSize: const Size(200, 50),
-                ),
-                child: const Text(
-                  'Log In',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
               ),
             ),
 

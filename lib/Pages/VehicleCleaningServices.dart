@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:sachir_vehicle_care/Pages/BodyWash.dart';
 import 'package:sachir_vehicle_care/Pages/VehicleCleaningMain.dart';
+import 'package:sachir_vehicle_care/Pages/BodyWash.dart';
+import 'package:sachir_vehicle_care/Pages/Fullservice.dart';
+import 'package:sachir_vehicle_care/Pages/UnderBodyCleaning.dart';
+import 'package:sachir_vehicle_care/Pages/InteriorCleaning.dart';
+import 'package:sachir_vehicle_care/Pages/EngineBayCleaning.dart';
+import 'package:sachir_vehicle_care/Pages/HeadLightCleaning.dart';
+import 'package:sachir_vehicle_care/Pages/BodyWaxing.dart';
+import 'package:sachir_vehicle_care/Pages/BodyProtectSticker.dart';
+import 'package:sachir_vehicle_care/Pages/NanoCoating.dart';
 
 class VehicleCleaningServicesScreen extends StatelessWidget {
   const VehicleCleaningServicesScreen({Key? key}) : super(key: key);
@@ -26,7 +34,6 @@ class VehicleCleaningServicesScreen extends StatelessWidget {
             children: [
               Stack(
                 children: [
-
                   // Background image
                   Container(
                     width: double.infinity,
@@ -129,48 +136,62 @@ class VehicleCleaningServicesScreen extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
+                    // Body wash - fixed navigation
                     _buildServiceCard(
                       title: 'Body wash',
                       image: 'lib/assets/Bodywash.jpg',
-                      price: 'LKR. 1,500',
+                      price: '1,500 LKR',
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const BodyWashServiceScreen()),
+                          MaterialPageRoute(builder: (context) => const ServiceDetailsScreen()),
                         );
                       },
                     ),
 
                     const SizedBox(height: 15),
 
+                    // Full Service - fixed navigation
                     _buildServiceCard(
                       title: 'Full Service',
                       image: 'lib/assets/Fullservice.jpg',
-                      price: 'LKR. 7,500',
+                      price: '7,500 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const FullServiceDetailsScreen()),
+                        );
                       },
                     ),
 
                     const SizedBox(height: 15),
 
+                    // Under body cleaning - fixed navigation
                     _buildServiceCard(
                       title: 'Under body cleaning',
                       image: 'lib/assets/UnderBodyClean.jpg',
-                      price: 'LKR. 500',
+                      price: '1,000 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const UBCleaningDetailsScreen()),
+                        );
                       },
                     ),
 
                     const SizedBox(height: 15),
 
+                    // The navigation for these services needs to be implemented
+                    // following the same pattern as above
                     _buildServiceCard(
                       title: 'Interior cleaning',
                       image: 'lib/assets/InteriorCleaning.jpg',
-                      price: 'LKR. 3,500',
+                      price: '3,500 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const InteriorCleaningScreen()),
+                        );
                       },
                     ),
 
@@ -179,9 +200,12 @@ class VehicleCleaningServicesScreen extends StatelessWidget {
                     _buildServiceCard(
                       title: 'Engine Bay Cleaning',
                       image: 'lib/assets/EngineCleaning.jpg',
-                      price: 'LKR. 650',
+                      price: '650 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const EngineBayCleaningScreen()),
+                        );
                       },
                     ),
 
@@ -190,9 +214,12 @@ class VehicleCleaningServicesScreen extends StatelessWidget {
                     _buildServiceCard(
                       title: 'Head Light cleaning',
                       image: 'lib/assets/HeadLightClean.jpg',
-                      price: 'LKR. 1,200',
+                      price: '1,200 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HeadLightCleaningScreen()),
+                        );
                       },
                     ),
 
@@ -201,9 +228,12 @@ class VehicleCleaningServicesScreen extends StatelessWidget {
                     _buildServiceCard(
                       title: 'Body Waxing',
                       image: 'lib/assets/BodyWaxing.jpg',
-                      price: 'LKR. 14,500',
+                      price: '14,500 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const BodyWaxingScreen()),
+                        );
                       },
                     ),
 
@@ -212,9 +242,12 @@ class VehicleCleaningServicesScreen extends StatelessWidget {
                     _buildServiceCard(
                       title: 'Body Protect Sticker',
                       image: 'lib/assets/BodySticker.jpg',
-                      price: 'LKR. 25,000',
+                      price: '25,000 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const BodyProtectStickerScreen()),
+                        );
                       },
                     ),
 
@@ -223,9 +256,12 @@ class VehicleCleaningServicesScreen extends StatelessWidget {
                     _buildServiceCard(
                       title: 'NANO Coating',
                       image: 'lib/assets/NanoCoating.jpg',
-                      price: 'LKR. 18,000',
+                      price: '18,000 LKR',
                       onTap: () {
-                        // Handle service selection
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const NanoCoatingScreen()),
+                        );
                       },
                     ),
 

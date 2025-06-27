@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sachir_vehicle_care/Pages/SplashScreen.dart';
-
+import 'package:sachir_vehicle_care/providers/auth_provider.dart';
+import 'package:sachir_vehicle_care/providers/vehicle_provider.dart';
+import 'package:sachir_vehicle_care/providers/appointment_provider.dart';
+import 'package:sachir_vehicle_care/providers/service_provider.dart';
 
 void main() {
-  runApp(const SachiR_Vehicle_Care());
+  runApp(
+    MultiProvider(      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => VehicleProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentProvider()),
+        ChangeNotifierProvider(create: (_) => ServiceProvider()),
+      ],
+      child: const SachiR_Vehicle_Care(),
+    ),
+  );
 }
 
 class SachiR_Vehicle_Care extends StatelessWidget {

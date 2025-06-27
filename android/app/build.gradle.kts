@@ -9,6 +9,7 @@ android {
     namespace = "com.example.sachir_vehicle_care"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -28,6 +29,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Add manifestPlaceholders for the AndroidManifest.xml
+        manifestPlaceholders["applicationName"] = "io.flutter.app.FlutterApplication"
     }
 
     buildTypes {

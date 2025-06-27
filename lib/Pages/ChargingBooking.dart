@@ -1,23 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sachir_vehicle_care/Pages/VehicleRepairMain.dart';
+import 'package:sachir_vehicle_care/Pages/VehicleChargingMain.dart';
 
-class VehicleRepairBookingScreen extends StatefulWidget {
-  const VehicleRepairBookingScreen({Key? key}) : super(key: key);
+class VehicleChargingBookingScreen extends StatefulWidget {
+  const VehicleChargingBookingScreen({Key? key}) : super(key: key);
 
   @override
-  State<VehicleRepairBookingScreen> createState() => _VehicleRepairBookingScreenState();
+  State<VehicleChargingBookingScreen> createState() => _VehicleChargingBookingScreenState();
 }
 
-class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen> {
+class _VehicleChargingBookingScreenState extends State<VehicleChargingBookingScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
   final TextEditingController _vehicleNumberController = TextEditingController();
   final TextEditingController _vehicleModelController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _issueDescriptionController = TextEditingController();
+
+  // Station location selection
+  String? _selectedStation;
 
   DateTime? _selectedDate;
+
+  // List of charging stations in Sri Lanka
+  final List<String> _chargingStations = [
+    'ChargeNET - Trace Expert City, Maradana',
+    'EVPOINT - Colombo City Centre',
+    'Lanka Filling Station - Negombo Road',
+    'CPC Filling Station - High-level Road',
+    'ChargeNET - SLNP Filling Station',
+    'R&R Service Center - Kandy Road',
+    'GoEV Station - Liberty Plaza',
+    'EVPOINT - Cinnamon Grand',
+    'ChargeNET - Crescat Boulevard',
+    'EVPOINT - One Galle Face Mall',
+    'ChargeNET - Keells Super',
+    'Lanka IOC - Pelawatte',
+  ];
 
   // ScrollController to manage the form's scrolling
   final ScrollController _scrollController = ScrollController();
@@ -29,7 +47,6 @@ class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen>
     _vehicleNumberController.dispose();
     _vehicleModelController.dispose();
     _dateController.dispose();
-    _issueDescriptionController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -68,7 +85,8 @@ class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen>
         _contactController.text.isEmpty ||
         _vehicleNumberController.text.isEmpty ||
         _vehicleModelController.text.isEmpty ||
-        _dateController.text.isEmpty) {
+        _dateController.text.isEmpty ||
+        _selectedStation == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill all required fields'),
@@ -141,16 +159,16 @@ class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen>
                       ),
                       const SizedBox(height: 20),
                       const Text(
-                        'Repair Booking Confirmed!',
+                        'Charging Booking Confirmed!',
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF004D5B),
                         ),
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        'We will contact you shortly to discuss your repair needs.',
+                        'We will contact you shortly to confirm your charging appointment.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
@@ -165,7 +183,7 @@ class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen>
                             Navigator.of(context).pop();
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (context) => const VehicleRepairMainScreen(),
+                                builder: (context) => const VehicleChargingMainScreen(),
                               ),
                             );
                           },
@@ -245,7 +263,7 @@ class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen>
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0),
+                          padding: const EdgeInsets.only(bottom: 0.0),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -422,9 +440,9 @@ class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen>
 
                             const SizedBox(height: 16),
 
-                            // Issue description
+                            // Charging Station Dropdown
                             const Text(
-                              'Describe your issue',
+                              'Select Charging Station',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -432,20 +450,55 @@ class _VehicleRepairBookingScreenState extends State<VehicleRepairBookingScreen>
                             ),
                             const SizedBox(height: 8),
                             Container(
-                              height: 100,
+                              height: 50,
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                              child: TextField(
-                                controller: _issueDescriptionController,
-                                maxLines: 4,
-                                style: const TextStyle(fontSize: 14),
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                  border: InputBorder.none,
-                                  hintText: 'Enter your description...',
-                                  hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                              child: Theme(
+                                // Use Theme to modify the dropdown button properties
+                                data: Theme.of(context).copyWith(
+                                  inputDecorationTheme: const InputDecorationTheme(
+                                    // Reduce internal padding to prevent overflow
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: ButtonTheme(
+                                    alignedDropdown: true, // Ensures menu aligns with button
+                                    child: DropdownButton<String>(
+                                      isExpanded: true, // Make dropdown take full width of container
+                                      hint: const Text(
+                                        'Select a charging station',
+                                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      value: _selectedStation,
+                                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                                      iconSize: 24,
+                                      elevation: 16,
+                                      style: const TextStyle(color: Colors.black, fontSize: 14),
+                                      dropdownColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedStation = newValue;
+                                        });
+                                      },
+                                      items: _chargingStations
+                                          .map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(fontSize: 14),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
